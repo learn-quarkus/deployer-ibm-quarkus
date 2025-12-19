@@ -1,0 +1,27 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ ibm_quarkus_beginner_workshop_app_of_apps_gitops_app }}
+  namespace: {{ ibm_quarkus_beginner_workshop_argocd_namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: {{ ibm_quarkus_beginner_workshop_app_of_apps_gitops_app }}
+    name: ""
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - ApplyOutOfSyncOnly=false
+      - CreateNamespace=true
+  source:
+    repoURL: {{ ibm_quarkus_beginner_workshop_gitops_repo }}
+    targetRevision: {{ ibm_quarkus_beginner_workshop_gitops_repo_tag }}
+    path: {{ ibm_quarkus_beginner_workshop_app_of_apps_gitops_repo_path }}
+    helm:
+      values: |

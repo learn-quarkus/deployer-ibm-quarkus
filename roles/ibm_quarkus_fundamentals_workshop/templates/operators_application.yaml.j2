@@ -1,0 +1,33 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: operators-system
+  namespace: {{ ibm_quarkus_beginner_workshop_argocd_namespace }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: operators-system
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ApplyOutOfSyncOnly=true
+      - CreateNamespace=true
+  source:
+    repoURL: {{ ibm_quarkus_beginner_workshop_gitops_repo }}
+    targetRevision: {{ ibm_quarkus_beginner_workshop_gitops_repo_tag }}
+    path: {{ ibm_quarkus_beginner_workshop_operators_gitops_repo_path }}
+    helm:
+      values: |
+          kiali:
+            subscription:
+              channel: stable
+              installPlanApproval: Automatic
+              name: kiali-ossm
+              source: redhat-operators
+              sourceNamespace: openshift-marketplace

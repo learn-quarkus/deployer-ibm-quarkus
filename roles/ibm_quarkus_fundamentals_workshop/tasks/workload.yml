@@ -1,0 +1,23 @@
+---
+
+- name: Install OpenShift Gitops
+  ansible.builtin.include_tasks: openshift_gitops.yml
+
+- name: Create operator subscription for kubernetes-imagepuller-operator
+  kubernetes.core.k8s:
+    merge_type:
+    - merge
+    definition: "{{ lookup('file', 'kubernetes-imagepuller-operator_subscription.yaml' ) }}"
+
+- name: Install Dev Spaces operator and CheCluster
+  ansible.builtin.include_tasks: devspaces_operator.yml
+
+- name: Install Showroom
+  ansible.builtin.include_tasks: showroom.yml
+
+- name: Install ArgoCD Apps
+  ansible.builtin.include_tasks: argo-apps.yml
+
+- name: Final workshop setup
+  ansible.builtin.include_tasks: finally.yml
+

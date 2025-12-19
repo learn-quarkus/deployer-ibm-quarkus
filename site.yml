@@ -1,0 +1,13 @@
+---
+- name: Install Quarkus Fundamentals Workshop
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  run_once: true
+
+  tasks:
+    - name: "Install Workshop"
+      ansible.builtin.include_role:
+        name: ibm_quarkus_fundamentals_workshop
+      vars:
+        ACTION: create

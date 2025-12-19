@@ -1,0 +1,29 @@
+---
+- name: Set user info for showroom
+  agnosticd_user_info:
+    data:
+      user_name: "kubeadmin"      
+      user_password: "{{ ocp4_workload_authentication_htpasswd_user_password }}"
+      openshift_cluster_console: "https://{{ r_console_route.resources[0].spec.host }}"
+      openshift_api_internal: "{{ ibm_quarkus_beginner_workshop_openshift_api_internal }}"
+      openshift_subdomain: "{{ r_openshift_subdomain }}"
+      # openshift_gitops_password: " {{ openshift_gitops_admin_password }} "
+      # openshift_gitops_user: "admin"
+      DS_URL: "https://devspaces.{{ r_openshift_subdomain }}"
+      ROUTE_SUBDOMAIN: "{{ r_openshift_subdomain }}"
+      CONSOLE_URL: "https://{{ r_console_route.resources[0].spec.host }}"
+      OPENSHIFT_USER_NAME: "{{ workshop_user }}"
+      USER_ID: "{{ workshop_user }}"
+      OPENSHIFT_USER_PASSWORD: "{{ workshop_password }}"
+      MASTER_URL: "{{ ibm_quarkus_beginner_workshop_openshift_api_internal }}"
+
+
+- name: Install Showroom
+  ansible.builtin.include_role:
+    name: ocp4_workload_showroom
+  vars:
+    ocp4_workload_showroom_deployment_type: "{{ ibm_quarkus_beginner_workshop_showroom_deployment_type }}"
+    ocp4_workload_showroom_content_git_repo: "{{ ibm_quarkus_beginner_workshop_showroom_content_git_repo }}"
+    ocp4_workload_showroom_content_git_repo_ref: "{{ ibm_quarkus_beginner_workshop_showroom_content_git_repo_ref }}"
+    ocp4_workload_showroom_content_only: true
+    ocp4_workload_showroom_namespace: "{{ ibm_quarkus_beginner_workshop_showroom_namespace }}"
