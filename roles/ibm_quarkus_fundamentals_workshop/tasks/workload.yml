@@ -3,6 +3,9 @@
 - name: Install OpenShift Gitops
   ansible.builtin.include_tasks: openshift_gitops.yml
 
+- name: Install Namespace Configuration Operator
+  ansible.builtin.include_tasks: namespaces_operator.yml
+
 - name: Create operator subscription for kubernetes-imagepuller-operator
   kubernetes.core.k8s:
     merge_type:

@@ -1,0 +1,37 @@
+kind: NamespaceConfig
+apiVersion: redhatcop.redhat.io/v1alpha1
+metadata:
+  name: ns-project-config
+spec:
+  labelSelector:
+    matchLabels:
+      ibm_user_project: "True"
+  templates:
+    - objectTemplate: |
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: RoleBinding
+        metadata:
+          name: admin
+          namespace: "{{ .Name | replace "@" "-" | replace "." "-" | lower }}-project"
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: admin
+        subjects:
+        - apiGroup: rbac.authorization.k8s.io
+          kind: User
+          name: "{{ .Name }}"
+    - objectTemplate: |
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: RoleBinding
+        metadata:
+          name: monitoring-edit
+          namespace: "{{ .Name | replace "@" "-" | replace "." "-" | lower }}-project"
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name:  monitoring-edit
+        subjects:
+        - apiGroup: rbac.authorization.k8s.io
+          kind: User
+          name: "{{ .Name }}"

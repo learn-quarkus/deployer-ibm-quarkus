@@ -1,0 +1,63 @@
+---
+
+- name: Create Namespace for Namespace Configuration Operator
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('file', 'namespace-ns.yml') | from_yaml }}"
+  retries: 10
+  delay: 2
+  register: git_namespace_ns_result
+  until: git_namespace_ns_result is not failed
+
+- name: Create Namespace Configuration Operator 
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('file', 'namespace-operator.yml') | from_yaml }}"
+  retries: 10
+  delay: 5
+  register: git_ns_config_result
+  until: git_ns_config_result is not failed
+
+- name: Create Namespace Configuration Operator Group
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('file', 'namespace-op-group.yml') | from_yaml }}"
+  retries: 10
+  delay: 5
+  register: git_ns_op_config_result
+  until: git_ns_op_config_result is not failed
+
+- name: Wait until namespace configuration operator has been created
+  kubernetes.core.k8s_info:
+    api_version: apps/v1
+    kind: Deployment
+    name: namespace-configuration-operator-controller-manager
+    namespace: namespace-configuration-operator
+  register: r_openshift_namespace_config
+  until:
+    - r_openshift_namespace_config is defined
+    - r_openshift_namespace_config.resources is defined
+    - r_openshift_namespace_config.resources | length | int > 0
+    - r_openshift_namespace_config.resources[0].spec.replicas is defined
+    - r_openshift_namespace_config.resources[0].status.availableReplicas is defined
+    - r_openshift_namespace_config.resources[0].status.availableReplicas | int == r_openshift_namespace_config.resources[0].spec.replicas | int
+  retries: 10
+  delay: 5
+
+- name: Configure Namespace Configuration Operator - user
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('file', 'ns-user-config.yml') | from_yaml }}"
+  retries: 10
+  delay: 5
+  register: namespace_user_config_result
+  until: namespace_user_config_result is not failed
+
+- name: Configure Namespace Configuration Operator - proj
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('file', 'ns-proj-config.yml') | from_yaml }}"
+  retries: 10
+  delay: 5
+  register: namespace_proj_config_result
+  until: namespace_proj_config_result is not failed
