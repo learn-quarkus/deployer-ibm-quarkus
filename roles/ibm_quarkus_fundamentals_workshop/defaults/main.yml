@@ -239,5 +239,5 @@ ibm_quarkus_beginner_workshop_openshift_devspaces_operator_catalog_snapshot_imag
 ibm_quarkus_beginner_workshop_install_app_of_apps: false
 ibm_quarkus_beginner_workshop_install_openshift_gitops: false
 
-workshop_user: default_user
+workshop_user: "%USERID%"
 workshop_password: default_password
