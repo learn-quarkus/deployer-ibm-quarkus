@@ -1,0 +1,10 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: redhat-operators-index
+  namespace: openshift-marketplace
+spec:
+  displayName: Red Hat Operators Index 4.18
+  image: 'quay.io/gpte-devops-automation/olm_snapshot_redhat_catalog:v4.18_2026_01_05'
+  publisher: rjarvine@ibm.com
+  sourceType: grpc

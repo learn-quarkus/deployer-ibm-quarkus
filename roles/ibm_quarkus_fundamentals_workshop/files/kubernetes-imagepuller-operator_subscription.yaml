@@ -10,5 +10,5 @@ spec:
   channel: stable
   installPlanApproval: Automatic
   name: kubernetes-imagepuller-operator
-  source: community-operators
+  source: community-operators-index
   sourceNamespace: openshift-marketplace

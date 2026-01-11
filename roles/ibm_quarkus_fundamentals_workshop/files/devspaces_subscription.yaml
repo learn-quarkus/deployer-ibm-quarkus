@@ -10,5 +10,5 @@ spec:
   channel: stable
   installPlanApproval: Automatic
   name: devspaces
-  source: redhat-operators
+  source: redhat-operators-index
   sourceNamespace: openshift-marketplace

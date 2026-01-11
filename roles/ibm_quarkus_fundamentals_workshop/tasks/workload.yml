@@ -1,5 +1,16 @@
 ---
 
+- name: Create CatalogSource Index 4.18
+  k8s:
+    state: present
+    merge_type:
+    - strategic-merge
+    - merge
+    definition: "{{ lookup('file', item ) | from_yaml }}"
+  loop:
+  - redhat-operators-index.yaml
+  - community-operators-index.yaml
+
 - name: Install OpenShift Gitops
   ansible.builtin.include_tasks: openshift_gitops.yml
 

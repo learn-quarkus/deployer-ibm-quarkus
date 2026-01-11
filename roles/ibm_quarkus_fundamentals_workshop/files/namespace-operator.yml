@@ -7,5 +7,5 @@ spec:
   channel: alpha
   installPlanApproval: Automatic
   name: namespace-configuration-operator
-  source: community-operators
+  source: community-operators-index
   sourceNamespace: openshift-marketplace
