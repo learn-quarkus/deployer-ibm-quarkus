@@ -14,12 +14,3 @@ spec:
             ibm_user_project: "True"
             ibm_user_email: {{ .Name | replace "@" "-" }}
             ibm_user_clean: {{ .Name | replace "@" "-" | replace "." "-" | lower }}
-    - objectTemplate: |
-        apiVersion: v1
-        kind: Namespace
-        metadata:
-          name: {{ .Name | replace "@" "-" | replace "." "-" | lower }}-guide
-          labels:
-            ibm_user_guide: "True"
-            ibm_user_email: {{ .Name | replace "@" "-" }}
-            ibm_user_clean: {{ .Name | replace "@" "-" | replace "." "-" | lower }}
