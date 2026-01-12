@@ -8,25 +8,33 @@ spec:
       ibm_user_project: "True"
   templates:
     - objectTemplate: |
-        apiVersion: rbac.authorization.k8s.io/v1
-        kind: RoleBinding
+        apiVersion: v1
+        kind: LimitRange
         metadata:
-          name: admin
-          namespace: "{{ .Name | replace "@" "-" | replace "." "-" | lower }}-project"
-        roleRef:
-          apiGroup: rbac.authorization.k8s.io
-          kind: ClusterRole
-          name: admin
-        subjects:
-        - apiGroup: rbac.authorization.k8s.io
-          kind: User
-          name: "{{ .Name }}"
+          name: '{{ .Name }}-core-resource-limits'
+          namespace: {{ .Name }}
+        spec:
+          limits:
+            - type: Container
+              max:
+                cpu: 4
+                memory: 12Gi
+              default:
+                cpu: 500m
+                memory: 1.5Gi
+              defaultRequest:
+                cpu: 50m
+                memory: 256Mi
+            - type: Pod
+              max:
+                cpu: 4
+                memory: 12Gi
     - objectTemplate: |
         apiVersion: rbac.authorization.k8s.io/v1
         kind: RoleBinding
         metadata:
           name: monitoring-edit
-          namespace: "{{ .Name | replace "@" "-" | replace "." "-" | lower }}-project"
+          namespace: "{{ .Name }}"
         roleRef:
           apiGroup: rbac.authorization.k8s.io
           kind: ClusterRole
@@ -34,4 +42,4 @@ spec:
         subjects:
         - apiGroup: rbac.authorization.k8s.io
           kind: User
-          name: "{{ .Name }}"
+          name: {{ (lookup "v1" "Namespace" "" .Name ).metadata.annotations.user_email }}

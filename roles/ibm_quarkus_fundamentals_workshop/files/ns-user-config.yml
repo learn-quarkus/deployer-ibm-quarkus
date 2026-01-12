@@ -6,11 +6,15 @@ spec:
   providerName: IBMid
   templates:
     - objectTemplate: |
-        apiVersion: v1
-        kind: Namespace
+        apiVersion: project.openshift.io/v1
+        kind: Project
         metadata:
           name: {{ .Name | replace "@" "-" | replace "." "-" | lower }}-project
           labels:
             ibm_user_project: "True"
-            ibm_user_email: {{ .Name | replace "@" "-" }}
-            ibm_user_clean: {{ .Name | replace "@" "-" | replace "." "-" | lower }}
+          annotations:
+            openshift.io/requester: {{ .Name }}
+            project_basename: {{ .Name | replace "@" "-" | replace "." "-" | lower }}
+            user_email: {{ .Name }}
+            openshift.io/display-name: {{ .Name | replace "@" "-" | replace "." "-" | lower }}-project
+            openshift.io/description: "Quarkus Fundamentals workshop project"
