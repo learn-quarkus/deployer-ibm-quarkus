@@ -41,7 +41,7 @@
     - r_openshift_namespace_config.resources[0].spec.replicas is defined
     - r_openshift_namespace_config.resources[0].status.availableReplicas is defined
     - r_openshift_namespace_config.resources[0].status.availableReplicas | int == r_openshift_namespace_config.resources[0].spec.replicas | int
-  retries: 50
+  retries: 200
   delay: 5
 
 - name: Configure Namespace Configuration Operator - user
