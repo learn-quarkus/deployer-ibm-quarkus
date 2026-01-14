@@ -43,3 +43,17 @@ spec:
         - apiGroup: rbac.authorization.k8s.io
           kind: User
           name: {{ (lookup "v1" "Namespace" "" .Name ).metadata.annotations.user_email }}
+    - objectTemplate: |
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: RoleBinding
+        metadata:
+          name: admin
+          namespace: "{{ .Name }}"
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: admin
+        subjects:
+          - apiGroup: rbac.authorization.k8s.io
+            kind: User
+            name: {{ (lookup "v1" "Namespace" "" .Name ).metadata.annotations.user_email }}
