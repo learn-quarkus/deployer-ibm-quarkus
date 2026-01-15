@@ -11,6 +11,15 @@
     namespace: openshift-console
     name: deployer-notification
 
+# Remove kube:admin login option
+- name: Final Step - Removing kube-admin account
+  kubernetes.core.k8s:
+    state: absent
+    api_version: v1
+    kind: Secret
+    namespace: kube-system
+    name: kubeadmin
+
 # Leave these as the last tasks in the playbook
 # ---------------------------------------------
 
