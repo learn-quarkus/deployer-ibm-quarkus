@@ -8,7 +8,8 @@ metadata:
   namespace: openshift-operators
 spec:
   channel: stable
-  installPlanApproval: Automatic
+  installPlanApproval: Manual
+  startingCSV: devspacesoperator.v3.24.1
   name: devspaces
   source: redhat-operators-index
   sourceNamespace: openshift-marketplace
