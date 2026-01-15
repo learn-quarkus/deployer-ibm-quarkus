@@ -1,2 +1,23 @@
 ---
+- name: Add consolenotification content-link
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: console.openshift.io/v1
+      kind: ConsoleNotification
+      metadata:
+        name: content-link
+      spec:
+        text: "Workshop content: "
+        location: BannerTop
+        link:
+          href: "https://showroom-showroom.{{ r_openshift_subdomain }}"
+          text: "Quarkus Fundamentals"
+        color: '#fff'
+        backgroundColor: '#0066cc'
 
+- name: Echo workshop content url
+  ansible.builtin.debug:
+    msg: "Workshop content url: https://showroom-showroom.{{ r_openshift_subdomain }}"
+  when:
+    - not silent | bool
