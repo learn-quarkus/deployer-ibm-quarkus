@@ -12,7 +12,7 @@ ocp4_workload_authentication_htpasswd_user_password: openshift
 ibm_quarkus_beginner_workshop_user_count: "{{ ocp4_workload_authentication_htpasswd_user_count }}"
 ibm_quarkus_beginner_workshop_user_prefix: "{{ ocp4_workload_authentication_htpasswd_user_base }}"
 
-
+advanced_workshop_enabled: false
 
 # ------------------------------------------------
 # OpenShift Gitops
@@ -186,6 +186,8 @@ ibm_quarkus_beginner_workshop_gitops_repo_tag: main
 ibm_quarkus_beginner_workshop_showroom_deployment_type: helm
 ibm_quarkus_beginner_workshop_showroom_content_git_repo: https://github.com/learn-quarkus/ibm-quarkus-showroom-m1.git
 ibm_quarkus_beginner_workshop_showroom_content_git_repo_ref: main
+ibm_quarkus_advanced_workshop_showroom_content_git_repo: https://github.com/learn-quarkus/ibm-quarkus-showroom-m2.git
+ibm_quarkus_advanced_workshop_showroom_content_git_repo_ref: main
 ibm_quarkus_beginner_workshop_showroom_content_only: true
 ibm_quarkus_beginner_workshop_showroom_namespace: showroom
 ibm_quarkus_beginner_workshop_showroom_host_prefix: ''

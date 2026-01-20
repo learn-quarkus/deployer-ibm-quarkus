@@ -17,13 +17,26 @@
       OPENSHIFT_USER_PASSWORD: "{{ workshop_password }}"
       MASTER_URL: "{{ ibm_quarkus_beginner_workshop_openshift_api_internal }}"
 
-
-- name: Install Showroom
+- name: Install Showroom - Basic
+  when:
+    - not advanced_workshop_enabled | default(true) | bool
   ansible.builtin.include_role:
     name: ocp4_workload_showroom
   vars:
     ocp4_workload_showroom_deployment_type: "{{ ibm_quarkus_beginner_workshop_showroom_deployment_type }}"
     ocp4_workload_showroom_content_git_repo: "{{ ibm_quarkus_beginner_workshop_showroom_content_git_repo }}"
     ocp4_workload_showroom_content_git_repo_ref: "{{ ibm_quarkus_beginner_workshop_showroom_content_git_repo_ref }}"
+    ocp4_workload_showroom_content_only: true
+    ocp4_workload_showroom_namespace: "{{ ibm_quarkus_beginner_workshop_showroom_namespace }}"
+
+- name: Install Showroom - Advanced
+  when:
+    - advanced_workshop_enabled | default(false) | bool
+  ansible.builtin.include_role:
+    name: ocp4_workload_showroom
+  vars:
+    ocp4_workload_showroom_deployment_type: "{{ ibm_quarkus_beginner_workshop_showroom_deployment_type }}"
+    ocp4_workload_showroom_content_git_repo: "{{ ibm_quarkus_advanced_workshop_showroom_content_git_repo }}"
+    ocp4_workload_showroom_content_git_repo_ref: "{{ ibm_quarkus_advanced_workshop_showroom_content_git_repo_ref }}"
     ocp4_workload_showroom_content_only: true
     ocp4_workload_showroom_namespace: "{{ ibm_quarkus_beginner_workshop_showroom_namespace }}"

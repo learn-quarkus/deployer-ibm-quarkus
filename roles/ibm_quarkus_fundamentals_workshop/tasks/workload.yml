@@ -11,6 +11,9 @@
   - redhat-operators-index.yaml
   - community-operators-index.yaml
 
+- name: Install Showroom
+  ansible.builtin.include_tasks: showroom.yml
+
 - name: Install OpenShift Gitops
   ansible.builtin.include_tasks: openshift_gitops.yml
 
@@ -23,14 +26,16 @@
     - merge
     definition: "{{ lookup('file', 'kubernetes-imagepuller-operator_subscription.yaml' ) }}"
 
-- name: Install Dev Spaces operator and CheCluster
-  ansible.builtin.include_tasks: devspaces_operator.yml
-
-- name: Install Showroom
-  ansible.builtin.include_tasks: showroom.yml
-
 - name: Install ArgoCD Apps
   ansible.builtin.include_tasks: argo-apps.yml
+
+- name: Install Advanced workshop deps
+  include_tasks: install-advanced.yml
+  when:
+    - advanced_workshop_enabled | default(false) | bool
+
+- name: Install Dev Spaces operator and CheCluster
+  ansible.builtin.include_tasks: devspaces_operator.yml
 
 - name: Final workshop setup
   ansible.builtin.include_tasks: finally.yml

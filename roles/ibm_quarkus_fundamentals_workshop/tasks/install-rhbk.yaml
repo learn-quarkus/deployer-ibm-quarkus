@@ -1,0 +1,12 @@
+---
+- name: Configure Namespace Configuration Operator - Add RHBK
+  kubernetes.core.k8s:
+    state: present
+    merge_type:
+    - strategic-merge
+    - merge
+    definition: "{{ lookup('file', 'ns-proj-config-rhbk.yml') | from_yaml }}"
+  retries: 10
+  delay: 5
+  register: adv_namespace_proj_config_result
+  until: adv_namespace_proj_config_result is not failed
