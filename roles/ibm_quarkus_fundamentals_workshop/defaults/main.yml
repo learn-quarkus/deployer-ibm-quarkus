@@ -1,4 +1,11 @@
 become_override: false
+
+#workshop support contacts
+workshop_admins: >-
+  rjarvine@ibm.com
+  jaya.baskaran@ibm.com
+  danoh@ibm.com
+
 ocp_username: kubeadmin
 silent: false
 guid: ibmquarkus

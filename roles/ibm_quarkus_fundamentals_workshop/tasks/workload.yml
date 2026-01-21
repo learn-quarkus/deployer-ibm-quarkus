@@ -11,6 +11,9 @@
   - redhat-operators-index.yaml
   - community-operators-index.yaml
 
+- name: Configure workshop support access
+  ansible.builtin.include_tasks: workshop-admins.yml
+
 - name: Install Showroom
   ansible.builtin.include_tasks: showroom.yml
 

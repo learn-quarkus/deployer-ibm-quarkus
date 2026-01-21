@@ -1,0 +1,22 @@
+---
+
+- name: Enable admin accounts for workshop support
+  when: workshop_admins is defined
+  loop: "{{ workshop_admins | split(' ') }}"
+  loop_control:
+    loop_var: _workshop_admin
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      kind: ClusterRoleBinding
+      apiVersion: rbac.authorization.k8s.io/v1
+      metadata:
+        name: "workshop-rbac-{{ _workshop_admin | regex_replace('@', '-') | regex_replace('\\.', '-') }}"
+      subjects:
+        - kind: User
+          apiGroup: rbac.authorization.k8s.io
+          name: "{{ _workshop_admin }}"
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: cluster-admin
