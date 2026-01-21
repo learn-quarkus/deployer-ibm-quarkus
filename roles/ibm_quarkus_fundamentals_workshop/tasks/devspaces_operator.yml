@@ -1,5 +1,14 @@
 ---
 
+- name: create project for devspaces operator
+  k8s:
+    state: present
+    kind: Project
+    api_version: project.openshift.io/v1
+    definition:
+      metadata:
+        name: devspaces
+
 - name: Create operator subscription for Devspaces
   kubernetes.core.k8s:
     merge_type:
@@ -8,12 +17,21 @@
   retries: 10
   delay: 30
 
+- name: Create Devspaces Operator Group
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('file', 'devspaces-op-group.yml') | from_yaml }}"
+  retries: 10
+  delay: 5
+  register: ds_op_config_result
+  until: ds_op_config_result is not failed
+
 - name: wait for the status of the Devspaces subscription to not be empty
   k8s_info:
     api_version: operators.coreos.com/v1alpha1
     kind: Subscription
     name: devspaces
-    namespace: openshift-operators
+    namespace: devspaces
   register: devspaces_subscription_out
   until:
     - devspaces_subscription_out is defined
@@ -30,7 +48,7 @@
       apiVersion: operators.coreos.com/v1alpha1
       kind: InstallPlan
       metadata:
-        namespace: openshift-operators
+        namespace: devspaces
         name: "{{ devspaces_subscription_out.resources[0].status.installplan.name }}"
       spec:
         approved: true

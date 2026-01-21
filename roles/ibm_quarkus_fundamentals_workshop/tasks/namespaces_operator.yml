@@ -32,7 +32,7 @@
     api_version: apps/v1
     kind: Deployment
     name: namespace-configuration-operator-controller-manager
-    namespace: namespace-configuration-operator
+    namespace: namespace-config-operator
   register: r_openshift_namespace_config
   until:
     - r_openshift_namespace_config is defined
