@@ -11,13 +11,66 @@
     namespace: openshift-console
     name: deployer-notification
 
-- name: Remove consolenotifications deployer-ibm-quarkus-status-banner
+- name: create serviceaccount deployer-cleanup-sa
   kubernetes.core.k8s:
-    state: absent
+    state: present
     api_version: v1
-    kind: ConsoleNotification
+    kind: ServiceAccount
+    definition:
+      metadata:
+        name: deployer-cleanup-sa
+        namespace: openshift-console
+
+- name: create clusterrole deployer-cleanup-role
+  kubernetes.core.k8s:
+    state: present
+    api_version: rbac.authorization.k8s.io/v1
+    kind: ClusterRole
+    definition:
+      metadata:
+        name: deployer-cleanup-role
+      rules:
+      - apiGroups: ["console.openshift.io"]
+        resources: ["*"]
+        verbs: ["delete"]
+
+- name: create clusterrolebinding deployer-cleanup-rbac
+  kubernetes.core.k8s:
+    api_version: rbac.authorization.k8s.io/v1
+    kind: ClusterRoleBinding
+    name: deployer-cleanup-rbac
+    definition:
+      subjects:
+      - kind: ServiceAccount
+        name: deployer-cleanup-sa
+        namespace: openshift-console
+      roleRef:
+        kind: ClusterRole
+        name: deployer-cleanup-role
+        apiGroup: rbac.authorization.k8s.io
+
+- name: create job deployer-cleanup-job
+  kubernetes.core.k8s:
+    api_version: batch/v1
+    kind: Job
+    name: deployer-cleanup-job
     namespace: openshift-console
-    name: deployer-ibm-quarkus-status-banner
+    definition:
+      spec:
+        template:
+          spec:
+            serviceAccountName: deployer-cleanup-sa
+            initContainers:
+            - name: deployer-cleanup-countdown
+              image: bitnami/kubectl:latest
+              command: ['sh', '-c', 'sleep 120']
+            containers:
+            - name: deployer-cleanup-run
+              image: bitnami/kubectl:latest
+              command: ["/bin/sh", "-c"]
+              args: ["kubectl delete consolenotification deployer-ibm-quarkus-status-banner"]
+            restartPolicy: Never
+        backoffLimit: 4
 
 # Remove kube:admin login option
 - name: Final Step - Removing kube-admin account
