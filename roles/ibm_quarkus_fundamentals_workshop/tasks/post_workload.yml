@@ -65,7 +65,7 @@
     namespace: openshift-console
     definition:
       spec:
-        activeDeadlineSeconds: 1200
+        activeDeadlineSeconds: 1800
         backoffLimit: 3
         template:
           spec:
