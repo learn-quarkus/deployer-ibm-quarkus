@@ -65,7 +65,7 @@
     namespace: openshift-console
     definition:
       spec:
-        activeDeadlineSeconds: 1800
+        activeDeadlineSeconds: 5500
         backoffLimit: 3
         template:
           spec:
@@ -75,12 +75,12 @@
             - name: deployer-cleanup-run-once
               image: bitnami/kubectl:latest
               command: ["/bin/sh", "-c"]
-              args: ["until kubectl get consolenotification deployer-ibm-quarkus-status-banner ; do echo 'Waiting for consolenotification/deployer-ibm-quarkus-status-banner to exist...'; sleep 10; done; echo 'STATUS: READY'; kubectl delete consolenotification deployer-ibm-quarkus-status-banner"]
+              args: ["until kubectl get consolenotification deployer-ibm-quarkus-status-banner ; do echo 'Waiting for consolenotification/deployer-ibm-quarkus-status-banner to return...'; sleep 10; done; echo 'STATUS: READY'; kubectl delete consolenotification deployer-ibm-quarkus-status-banner"]
             containers:
             - name: deployer-cleanup-run-again
               image: bitnami/kubectl:latest
               command: ["/bin/sh", "-c"]
-              args: ["until kubectl get consolenotification deployer-ibm-quarkus-status-banner ; do echo 'Waiting for consolenotification/deployer-ibm-quarkus-status-banner to exist...'; sleep 10; done; echo 'STATUS: READY'; kubectl delete consolenotification deployer-ibm-quarkus-status-banner"]
+              args: ["until kubectl get consolenotification deployer-ibm-quarkus-status-banner ; do echo 'Waiting for consolenotification/deployer-ibm-quarkus-status-banner to return again...'; sleep 10; done; echo 'STATUS: READY'; kubectl delete consolenotification deployer-ibm-quarkus-status-banner"]
 
 # Remove kube:admin login option
 - name: Final Step - Removing kube-admin account
