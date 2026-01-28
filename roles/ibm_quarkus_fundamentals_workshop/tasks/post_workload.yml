@@ -71,8 +71,13 @@
           spec:
             serviceAccountName: deployer-cleanup-sa
             restartPolicy: Never
+            initContainers:
+            - name: deployer-cleanup-run-once
+              image: bitnami/kubectl:latest
+              command: ["/bin/sh", "-c"]
+              args: ["until kubectl get consolenotification deployer-ibm-quarkus-status-banner ; do echo 'Waiting for consolenotification/deployer-ibm-quarkus-status-banner to exist...'; sleep 10; done; echo 'STATUS: READY'; kubectl delete consolenotification deployer-ibm-quarkus-status-banner"]
             containers:
-            - name: deployer-cleanup-run
+            - name: deployer-cleanup-run-again
               image: bitnami/kubectl:latest
               command: ["/bin/sh", "-c"]
               args: ["until kubectl get consolenotification deployer-ibm-quarkus-status-banner ; do echo 'Waiting for consolenotification/deployer-ibm-quarkus-status-banner to exist...'; sleep 10; done; echo 'STATUS: READY'; kubectl delete consolenotification deployer-ibm-quarkus-status-banner"]
