@@ -11,6 +11,14 @@
     namespace: openshift-console
     name: deployer-notification
 
+- name: Remove consolenotifications deployer-ibm-quarkus-status-banner
+  kubernetes.core.k8s:
+    state: absent
+    api_version: v1
+    kind: ConsoleNotification
+    namespace: openshift-console
+    name: deployer-ibm-quarkus-status-banner
+
 - name: create serviceaccount deployer-cleanup-sa
   kubernetes.core.k8s:
     state: present
@@ -32,7 +40,7 @@
       rules:
       - apiGroups: ["console.openshift.io"]
         resources: ["*"]
-        verbs: ["delete"]
+        verbs: ["delete", "list", "get", "watch"]
 
 - name: create clusterrolebinding deployer-cleanup-rbac
   kubernetes.core.k8s:
@@ -57,20 +65,22 @@
     namespace: openshift-console
     definition:
       spec:
+        activeDeadlineSeconds: 1200
+        backoffLimit: 3
         template:
           spec:
             serviceAccountName: deployer-cleanup-sa
             initContainers:
             - name: deployer-cleanup-countdown
               image: bitnami/kubectl:latest
-              command: ['sh', '-c', 'sleep 120']
+              command: ["/bin/sh", "-c"]
+              args: ["until kubectl get consolenotification deployer-ibm-quarkus-status-banner ; do echo 'Waiting for consolenotification/deployer-ibm-quarkus-status-banner to exist...'; sleep 10; done; echo 'READY';"]
             containers:
             - name: deployer-cleanup-run
               image: bitnami/kubectl:latest
               command: ["/bin/sh", "-c"]
               args: ["kubectl delete consolenotification deployer-ibm-quarkus-status-banner"]
             restartPolicy: Never
-        backoffLimit: 4
 
 # Remove kube:admin login option
 - name: Final Step - Removing kube-admin account
