@@ -34,8 +34,8 @@ RUN cp /tmp/quarkus-cli-${QUARKUS_CLI_VERSION}/bin/quarkus /usr/local/bin && cp 
 RUN chmod +x /usr/local/bin/quarkus && cd /usr/local/bin
 RUN mkdir -p ${JBANG_DIR} && curl -Ls https://sh.jbang.dev | bash -s - app setup 
 RUN ln -s ${JBANG_DIR}/bin/jbang /usr/local/bin/jbang
+RUN chmod a+w ${JAVA_HOME}/lib/security/cacerts
 RUN mkdir -p /home/user/.m2 && chmod -R a+w /home/user/.m2 && chown -R user.user /home/user --silent
-
 USER user
 
 RUN echo '-w "\n"' > $HOME/.curlrc
