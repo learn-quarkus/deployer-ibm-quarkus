@@ -1,0 +1,23 @@
+---
+- name: Find worker nodes
+  k8s_info:
+    api_version: v1
+    kind: Node
+    label_selectors:
+      - "node-role.kubernetes.io/worker"
+  register: r_worker_nodes
+
+- name: debug
+  ansible.builtin.debug:
+    msg: "{{ r_worker_nodes.resources }}"
+
+- name: Enable ODF on worker nodes
+  k8s:
+    definition:
+      apiVersion: v1
+      kind: Node
+      metadata:
+        name: "{{ item.metadata.name }}"
+        labels: "{{ item.metadata.labels | combine({'cluster.ocs.openshift.io/openshift-storage': ''}) }}"
+    state: present
+  loop: "{{ r_worker_nodes.resources }}"
