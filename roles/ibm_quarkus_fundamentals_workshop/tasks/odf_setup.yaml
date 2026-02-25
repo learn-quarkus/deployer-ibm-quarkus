@@ -7,10 +7,6 @@
       - "node-role.kubernetes.io/worker"
   register: r_worker_nodes
 
-- name: debug
-  ansible.builtin.debug:
-    msg: "{{ r_worker_nodes.resources }}"
-
 - name: Enable ODF on worker nodes
   k8s:
     definition:
@@ -21,3 +17,14 @@
         labels: "{{ item.metadata.labels | combine({'cluster.ocs.openshift.io/openshift-storage': ''}) }}"
     state: present
   loop: "{{ r_worker_nodes.resources }}"
+
+- name: Set default StorageClass
+  k8s:
+    state: present
+    definition:
+      kind: StorageClass
+      apiVersion: storage.k8s.io/v1
+      metadata:
+        name: ocs-external-storagecluster-ceph-rbd
+        annotations:
+          storageclass.kubernetes.io/is-default-class: 'true'
