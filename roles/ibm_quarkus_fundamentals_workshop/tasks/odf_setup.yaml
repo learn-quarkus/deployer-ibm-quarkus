@@ -30,14 +30,14 @@
         annotations:
           storageclass.kubernetes.io/is-default-class: 'true'
 
-- name: patch openshift-image-registry Config
-  kubernetes.core.k8s_json_patch:
-    namespace: openshfit-image-registry
-    kind: Config
-    api_version: "imageregistry.operator.openshift.io/v1"
-    name: cluster
-    patch:
-      - op: replace
-        path: '/spec/storage'
-        value:
-          emptyDir: {}
+#- name: patch openshift-image-registry Config
+#  kubernetes.core.k8s_json_patch:
+#    namespace: openshfit-image-registry
+#    kind: Config
+#    api_version: "imageregistry.operator.openshift.io/v1"
+#    name: cluster
+#    patch:
+#      - op: replace
+#        path: '/spec/storage'
+#        value:
+#          emptyDir: {}

@@ -183,7 +183,8 @@ ibm_quarkus_beginner_workshop_openshift_gitops_resource_customizations: |
 
 ibm_quarkus_beginner_workshop_openshift_gitops_ignore_differences: {}
 
-ibm_quarkus_beginner_workshop_gitops_repo: https://github.com/learn-quarkus/ibm-quarkus-beginners-helm.git
+#ibm_quarkus_beginner_workshop_gitops_repo: https://github.com/learn-quarkus/ibm-quarkus-beginners-helm.git
+ibm_quarkus_beginner_workshop_gitops_repo: https://github.com/ryanj/ibm-quarkus-beginners-helm.git
 ibm_quarkus_beginner_workshop_gitops_repo_tag: main
 
 
