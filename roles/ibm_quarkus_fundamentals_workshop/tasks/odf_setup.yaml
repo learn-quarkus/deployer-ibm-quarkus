@@ -1,22 +1,23 @@
 ---
 - name: Find worker nodes
+  register: r_worker_nodes
   k8s_info:
     api_version: v1
     kind: Node
     label_selectors:
       - "node-role.kubernetes.io/worker"
-  register: r_worker_nodes
 
 - name: Enable ODF on worker nodes
+  loop: "{{ r_worker_nodes.resources }}"
   k8s:
+    state: present
     definition:
       apiVersion: v1
       kind: Node
       metadata:
         name: "{{ item.metadata.name }}"
-        labels: "{{ item.metadata.labels | combine({'cluster.ocs.openshift.io/openshift-storage': ''}) }}"
-    state: present
-  loop: "{{ r_worker_nodes.resources }}"
+        labels:
+          'cluster.ocs.openshift.io/openshift-storage': ''
 
 - name: Set default StorageClass
   k8s:
@@ -28,3 +29,15 @@
         name: ocs-external-storagecluster-ceph-rbd
         annotations:
           storageclass.kubernetes.io/is-default-class: 'true'
+
+- name: patch openshift-image-registry Config
+  kubernetes.core.k8s_json_patch:
+    namespace: openshfit-image-registry
+    kind: Config
+    api_version: "imageregistry.operator.openshift.io/v1"
+    name: cluster
+    patch:
+      - op: replace
+        path: '/spec/storage'
+        value:
+          emptyDir: {}
